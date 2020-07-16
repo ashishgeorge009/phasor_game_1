@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/phaser/3.24.1/phaser.js"></script>
+    <title>Document</title>
+    <style>
+        html,
+        body{
+            margin: 0px;
+            padding: 0px;
+        }
+    </style>
+</head>
+<body>
+    <script type = "text/javascript">
+    const config={
+        type : Phaser.AUTO,
+        width: 800,
+        height: 600,
+        physics: {
+            default : "arcade",
+            graviry : {y:300}
+        },
+        scene:{
+            preload : preload,
+            create: setup,
+            update: update
+        }
+    }
+    let platform
+    function preload(){
+        this.load.image("sky","assets/sky.png");
+        this.load.image("platform","assets/platform.png");
+        this.load.image("sky","assets/player.png");
+        this.load.image("sky","assets/sky.png");
+    }
+    function setup(){
+        
+        this.add.image(400,300,"sky");
+        platform = this.physics.add.staticGroup();
+        platform.create(400,500, "platform").setScale(2).refreshBody();// refreshbody to tell the the system the scale has changee
+        platform.create(50,750, "platform");
+        platform.create(750,150, "platform");
+        player = this.input.keyboard.createCursorKeys();
+
+
+
+    }
+    function update(){
+
+    }
+    new Phaser.Game(config)
+    </script>
+</body>
+</html>
