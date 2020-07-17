@@ -64,7 +64,7 @@
         this.physics.add.collider(stars, platform);
 
         stars.children.iterate(function(star){
-            star.setBounceY(Phaser.Math.FloatBetween(0.4,0.8))
+            star.setBounceY(Phaser.Math.FloatBetween(0.2,0.4))
         });
 
         this.anims.create({
