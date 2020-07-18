@@ -101,7 +101,7 @@
                 player.setVelocityX(-160);
                 player.anims.play("left", true);
             } else if (cursor.right.isDown) {
-                player.setVelocityX(160);
+                player.setVelocityX(410);
                 player.anims.play("right", true);
             } else {
                 player.setVelocityX(0);
@@ -109,7 +109,7 @@
             }
             // Vertical Jump
             if (cursor.up.isDown && player.body.touching.down) {
-                player.setVelocityY(-430);
+                player.setVelocityY(-420);
             }
         
 
