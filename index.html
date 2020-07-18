@@ -43,6 +43,7 @@
             frameHeight: 48
         });
         this.load.image("star","assets/star.png");
+        this.load.sprite("bomb", "assets/bomb.png")
     }
     function setup(){
         
@@ -62,6 +63,8 @@
         this.physics.add.collider(player,stars, collectStar)
         this.physics.add.collider(player, platform);
         this.physics.add.collider(stars, platform);
+        // player.setcolliderWorldBounds(true);
+        player.setCollideWorldBounds(true);
 
         stars.children.iterate(function(star){
             star.setBounceY(Phaser.Math.FloatBetween(0.2,0.4))
