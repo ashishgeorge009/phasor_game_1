@@ -35,7 +35,7 @@
     }
     let platform;
     let cursor, stars, player;
-    let score = 0, scoreText, bombs;
+    let score = 0, scoreText, bombs, gameOver = false;
     function preload(){
         this.load.image("sky","assets/sky.png");
         this.load.image("platform","assets/platform.png");
@@ -56,11 +56,12 @@
         platform.create(760,150, "platform");
 
         player = this.physics.add.sprite(400,100,"hero");
-        bombs = this.physics.add.group({
-                key: "bomb",
-            //no repeat only 1 bomb
-                setXY: { x: 500, y: 0 }
-            });
+        bombs = this.physics.add.group();
+            let bomb = bombs.create(400, 0, "bomb");
+            bomb.setBounce(1);
+            bomb.setCollideWorldBounds(true);
+            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+
         cursor = this.input.keyboard.createCursorKeys();
         stars = this.physics.add.group({
             key: "star",
@@ -68,9 +69,11 @@
             setXY: {x :50 , y:0 , stepX :70}
         })
         this.physics.add.collider(player,stars, collectStar, null, this)// using collectStar.bind(this) here
+        this.physics.add.collider(player, bombs, hitBomb.bind(this));
         this.physics.add.collider(player, platform);
         this.physics.add.collider(stars, platform);
         this.physics.add.collider(platform,bombs);
+        
 
         scoreText = this.add.text(16, 16, "score:0", {
                 fontSize: "32px",
@@ -81,6 +84,8 @@
         stars.children.iterate(function(star){
             star.setBounceY(Phaser.Math.FloatBetween(0.2,0.4))
         });
+
+        
 
         this.anims.create({
             key:"left",
@@ -110,6 +115,9 @@
     }
  
     function update(){
+        if(gameOver==true){
+                return;
+            }
         if (cursor.left.isDown) {
                 player.setVelocityX(-160);
                 player.anims.play("left", true);
@@ -142,8 +150,22 @@
                 stars.children.iterate((child)=>{
                     child.enableBody(true,child.x , 0 , true,true)
                 })
+                let x = player.x < 400 ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+                let bomb = bombs.create(x, 0, "bomb");
+                bomb.setBounce(1);
+                bomb.setCollideWorldBounds(true);
+                bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
             }
+            
         }
+    function hitBomb() {
+        this.physics.pause();
+        player.setTint(0xff0000);
+        player.anims.play("normal");
+        gameOver = true
+
+        // location.reload();
+    }
     new Phaser.Game(config)
     </script>
 </body>
