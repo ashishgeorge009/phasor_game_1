@@ -35,6 +35,7 @@
     }
     let platform;
     let cursor, stars, player;
+    let score = 0, scoreText, bombs;
     function preload(){
         this.load.image("sky","assets/sky.png");
         this.load.image("platform","assets/platform.png");
@@ -43,7 +44,8 @@
             frameHeight: 48
         });
         this.load.image("star","assets/star.png");
-        this.load.sprite("bomb", "assets/bomb.png")
+        this.load.audioSprite("sfx","assets/fx_mixdown.json", ["assets/fx_mixdown.mp3", "assets/fx_mixdown.ogg"])
+        this.load.image("bomb", "assets/bomb.png")
     }
     function setup(){
         
@@ -54,16 +56,26 @@
         platform.create(760,150, "platform");
 
         player = this.physics.add.sprite(400,100,"hero");
+        bombs = this.physics.add.group({
+                key: "bomb",
+            //no repeat only 1 bomb
+                setXY: { x: 500, y: 0 }
+            });
         cursor = this.input.keyboard.createCursorKeys();
         stars = this.physics.add.group({
             key: "star",
             repeat: 10,
             setXY: {x :50 , y:0 , stepX :70}
         })
-        this.physics.add.collider(player,stars, collectStar)
+        this.physics.add.collider(player,stars, collectStar, null, this)// using collectStar.bind(this) here
         this.physics.add.collider(player, platform);
         this.physics.add.collider(stars, platform);
-        // player.setcolliderWorldBounds(true);
+        this.physics.add.collider(platform,bombs);
+
+        scoreText = this.add.text(16, 16, "score:0", {
+                fontSize: "32px",
+                fill: "white"
+            })
         player.setCollideWorldBounds(true);
 
         stars.children.iterate(function(star){
@@ -96,27 +108,42 @@
 
 
     }
-    function collectStar(player,star) {
-            star.disableBody(true, true);
-        }
+ 
     function update(){
         if (cursor.left.isDown) {
                 player.setVelocityX(-160);
                 player.anims.play("left", true);
+                // this.sound.playAudioSprite("sfx", "numkey");
             } else if (cursor.right.isDown) {
                 player.setVelocityX(410);
                 player.anims.play("right", true);
+                // this.sound.playAudioSprite("sfx", "numkey");
             } else {
                 player.setVelocityX(0);
                 player.anims.play("normal");
+                // this.sound.playAudioSprite("sfx", "numkey");
             }
             // Vertical Jump
             if (cursor.up.isDown && player.body.touching.down) {
                 player.setVelocityY(-420);
+                // this.sound.playAudioSprite("sfx", "numkey");
             }
         
 
     }
+
+    function collectStar(player,star) {
+        star.disableBody(true, true);
+
+            this.sound.playAudioSprite("sfx", "ping");
+            score += 10;
+            scoreText.setText("Score: " + score);
+            if(score%100 ==0){
+                stars.children.iterate((child)=>{
+                    child.enableBody(true,child.x , 0 , true,true)
+                })
+            }
+        }
     new Phaser.Game(config)
     </script>
 </body>
