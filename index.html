@@ -39,6 +39,7 @@
     function preload(){
         this.load.image("sky","assets/sky.png");
         this.load.image("platform","assets/platform.png");
+        this.load.image("arrow","assets/arrow.png");
         this.load.spritesheet("hero","assets/player.png",{
             frameWidth: 32,
             frameHeight: 48
@@ -116,14 +117,19 @@
  
     function update(){
         if(gameOver==true){
-                return;
+                // return;
+                this.registry.destroy(); // destroy registry
+                this.events.off();// disable all active events
+                this.scene.restart(); // restart current scene
+                gameOver=false;
+                score=0
             }
         if (cursor.left.isDown) {
-                player.setVelocityX(-160);
+                player.setVelocityX(-200);
                 player.anims.play("left", true);
                 // this.sound.playAudioSprite("sfx", "numkey");
             } else if (cursor.right.isDown) {
-                player.setVelocityX(410);
+                player.setVelocityX(200);
                 player.anims.play("right", true);
                 // this.sound.playAudioSprite("sfx", "numkey");
             } else {
@@ -167,6 +173,11 @@
         // location.reload();
     }
     new Phaser.Game(config)
+    // if(gameOver==true){
+    //     gameOver == false
+    //     new Phaser.Game(config)
+    // }
+
     </script>
 </body>
 </html>
