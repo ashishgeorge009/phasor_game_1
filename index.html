@@ -55,7 +55,7 @@
         platform.create(400,570, "platform").setScale(2).refreshBody();// refreshbody to tell the the system the scale has changee
         platform.create(50,350, "platform");
         platform.create(760,150, "platform");
-        this.add.image(660,470,"arrow").setScale(0.2);
+        this.add.image(660,470,"arrow").setScale(0.2).setAlpha(0.2);
 
         player = this.physics.add.sprite(400,100,"hero");
         bombs = this.physics.add.group();
