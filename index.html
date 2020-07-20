@@ -35,7 +35,7 @@
     }
     let platform;
     let cursor, stars, player;
-    let score = 0, scoreText, bombs, gameOver = false;
+    let score = 0, scoreText,highscore=0,hstext, bombs, gameOver = false;
     function preload(){
         this.load.image("sky","assets/sky.png");
         this.load.image("platform","assets/platform.png");
@@ -55,6 +55,7 @@
         platform.create(400,570, "platform").setScale(2).refreshBody();// refreshbody to tell the the system the scale has changee
         platform.create(50,350, "platform");
         platform.create(760,150, "platform");
+        this.add.image(660,470,"arrow").setScale(0.2);
 
         player = this.physics.add.sprite(400,100,"hero");
         bombs = this.physics.add.group();
@@ -76,10 +77,14 @@
         this.physics.add.collider(platform,bombs);
         
 
-        scoreText = this.add.text(16, 16, "score:0", {
+        scoreText = this.add.text(16, 16, "Score: 0", {
                 fontSize: "32px",
                 fill: "white"
             })
+        hstext = this.add.text(500, 16, "High Score: " + highscore, {
+            fontSize: "32px",
+            fill: "white"
+        })
         player.setCollideWorldBounds(true);
 
         stars.children.iterate(function(star){
@@ -122,6 +127,8 @@
                 this.events.off();// disable all active events
                 this.scene.restart(); // restart current scene
                 gameOver=false;
+                highscore = score>highscore?score:highscore;
+                hstext.setText("High Score: "+highscore);
                 score=0
             }
         if (cursor.left.isDown) {
