@@ -46,7 +46,8 @@
         });
         this.load.image("star","assets/star.png");
         this.load.audioSprite("sfx","assets/fx_mixdown.json", ["assets/fx_mixdown.mp3", "assets/fx_mixdown.ogg"])
-        this.load.image("bomb", "assets/bomb.png")
+        this.load.image("bomb", "assets/bomb.png");
+        this.load.image("gameover","assets/gameover.png");
     }
     function setup(){
         
@@ -55,8 +56,8 @@
         platform.create(400,570, "platform").setScale(2).refreshBody();// refreshbody to tell the the system the scale has changee
         platform.create(50,350, "platform");
         platform.create(760,150, "platform");
-        this.add.image(660,470,"arrow").setScale(0.2).setAlpha(0.2).refreshBody();
-
+        this.add.image(660,470,"arrow").setScale(0.2).setAlpha(0.2);
+       
         player = this.physics.add.sprite(400,100,"hero");
         bombs = this.physics.add.group();
             let bomb = bombs.create(400, 0, "bomb");
@@ -122,14 +123,17 @@
  
     function update(){
         if(gameOver==true){
-                // return;
-                this.registry.destroy(); // destroy registry
-                this.events.off();// disable all active events
+                // return;      
+            this.registry.destroy(); // destroy registry
+            this.events.off();// disable all active events
+            gameOver=false;
+            highscore = score>highscore?score:highscore;
+            hstext.setText("High Score: "+highscore);
+            score=0;
+            setTimeout(() => {
                 this.scene.restart(); // restart current scene
-                gameOver=false;
-                highscore = score>highscore?score:highscore;
-                hstext.setText("High Score: "+highscore);
-                score=0
+            }, 500);
+              
             }
         if (cursor.left.isDown) {
                 player.setVelocityX(-200);
@@ -176,6 +180,7 @@
         player.setTint(0xff0000);
         player.anims.play("normal");
         gameOver = true
+        this.add.image(400,300,"gameover");
 
         // location.reload();
     }
